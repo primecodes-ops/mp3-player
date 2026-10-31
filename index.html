@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>MP3 Player</title>
+</head>
+<body>
+
+    <h1>MP3 Player</h1>
+    <label for="playbackMode">Playback Mode:</label>
+
+    <select id="playbackMode">
+        <option value="next">Play Next</option>
+        <option value="repeat">Repeat Track</option>
+    </select>
+
+    <h2>Track List</h2>
+    <ul id="tracklist"></ul>
+    <audio id="player" controls></audio>
+
+    <script src="app.js"></script>
+</body>
+</html>
