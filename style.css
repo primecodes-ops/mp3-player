@@ -1,13 +1,23 @@
-/* ============ Theme ============ */
+/* =====================================================
+   Theme: "Dusk" — midnight violet with a rose-to-peach glow
+   Change the look by editing the variables below.
+   ===================================================== */
 :root {
-    --bg: #141414;
-    --surface: #1c1c1c;
-    --hover: #2a2a2a;
-    --text: #f5f5f5;
-    --muted: #a0a0a0;
-    --accent: #f5a524;
-    --accent-hover: #ffb93d;
-    --bar-height: 92px;
+    --bg: #0e0b1a;
+    --card: rgba(255, 255, 255, 0.04);
+    --hover: rgba(255, 255, 255, 0.09);
+    --surface: rgba(26, 20, 46, 0.72);
+    --border: rgba(255, 255, 255, 0.08);
+
+    --text: #f4f1fb;
+    --muted: #9b94b5;
+
+    --accent: #ff7a9c;
+    --accent-2: #ffb26b;
+    --grad: linear-gradient(135deg, var(--accent), var(--accent-2));
+
+    --bar-height: 96px;
+    --radius: 14px;
 }
 
 * {
@@ -16,38 +26,50 @@
 
 body {
     margin: 0;
-    background: var(--bg);
+    min-height: 100vh;
     color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(900px 500px at 8% -10%, rgba(255, 122, 156, 0.18), transparent 60%),
+        radial-gradient(700px 500px at 100% 0%, rgba(124, 92, 255, 0.20), transparent 60%),
+        var(--bg);
+    background-attachment: fixed;
 }
 
 /* ============ Header ============ */
 .app-header {
-    padding: 32px 24px 8px;
-    background: linear-gradient(to bottom, #2b2006, var(--bg));
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 12px;
 }
 
 .app-header h1 {
     margin: 0;
-    font-size: 2rem;
-    letter-spacing: -0.5px;
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 /* ============ Track list ============ */
 main {
     max-width: 900px;
     margin: 0 auto;
-    padding: 16px 24px;
-    /* keep the last track from hiding behind the fixed bar */
-    padding-bottom: calc(var(--bar-height) + 24px);
+    padding: 8px 24px;
+    /* keeps the last track clear of the floating bar */
+    padding-bottom: calc(var(--bar-height) + 48px);
 }
 
 main h2 {
-    font-size: 1rem;
+    margin: 20px 0 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
     color: var(--muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 16px 0 8px;
+    letter-spacing: 2px;
 }
 
 #tracklist {
@@ -59,23 +81,46 @@ main h2 {
 #tracklist li {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    gap: 16px;
+    margin-bottom: 8px;
+    padding: 10px 16px 10px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: var(--card);
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.2s, transform 0.2s, border-color 0.2s;
 }
 
 #tracklist li:hover {
     background: var(--hover);
+    transform: translateX(4px);
 }
 
 #tracklist li.playing {
-    font-weight: bold;
+    font-weight: 600;
     color: var(--accent);
+    background: rgba(255, 122, 156, 0.10);
+    border-color: rgba(255, 122, 156, 0.35);
 }
 
-/* Row pieces (used once the JS builds these inside each <li>) */
+/* Little pulsing dot on the track that's playing */
+#tracklist li.playing::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin-left: auto;
+    border-radius: 50%;
+    background: var(--grad);
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50%      { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Row pieces (filled in once the JS builds them inside each <li>) */
 #tracklist .track-info {
     flex: 1;
     min-width: 0;
@@ -87,46 +132,53 @@ main h2 {
     text-overflow: ellipsis;
 }
 
-#tracklist .track-meta {
-    font-size: 0.85rem;
-    font-weight: normal;
-    color: var(--muted);
-}
-
+#tracklist .track-meta,
 #tracklist .track-duration {
     font-size: 0.85rem;
-    font-weight: normal;
+    font-weight: 400;
     color: var(--muted);
 }
 
-/* ============ Thumbnail (rows + now playing) ============ */
+/* ============ Thumbnails ============ */
 .thumb {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     flex-shrink: 0;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #f5a524, #b8431f);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    background: var(--grad);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.92);
 }
 
-/* ============ Player bar ============ */
+/* Each row gets its own gradient, no JS needed */
+#tracklist li:nth-child(5n+1) .thumb { background: linear-gradient(135deg, #ff7a9c, #ffb26b); }
+#tracklist li:nth-child(5n+2) .thumb { background: linear-gradient(135deg, #7c5cff, #4fc3f7); }
+#tracklist li:nth-child(5n+3) .thumb { background: linear-gradient(135deg, #2dd4bf, #3b82f6); }
+#tracklist li:nth-child(5n+4) .thumb { background: linear-gradient(135deg, #f472b6, #7c5cff); }
+#tracklist li:nth-child(5n+5) .thumb { background: linear-gradient(135deg, #fbbf24, #f43f5e); }
+
+/* ============ Floating player bar ============ */
 .player-bar {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
     height: var(--bar-height);
     display: grid;
     grid-template-columns: 1fr minmax(280px, 2fr) 1fr;
     align-items: center;
     gap: 16px;
-    padding: 0 20px;
+    padding: 0 22px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
     background: var(--surface);
-    border-top: 1px solid #2f2f2f;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .now-playing {
@@ -136,11 +188,17 @@ main h2 {
     min-width: 0;
 }
 
+.now-playing .thumb {
+    width: 54px;
+    height: 54px;
+}
+
 .now-playing span {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .controls {
@@ -153,49 +211,51 @@ main h2 {
 .buttons {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
 }
 
 .buttons button {
     background: none;
     border: none;
-    color: var(--muted);
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 4px 8px;
     border-radius: 50%;
-    transition: color 0.15s, transform 0.1s;
+    padding: 6px 8px;
+    color: var(--muted);
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
 }
 
 .buttons button:hover {
     color: var(--text);
+    transform: scale(1.12);
 }
 
 .buttons button:active {
     transform: scale(0.92);
 }
 
-/* Main play button: filled amber circle */
-#playBtn {
-    width: 40px;
-    height: 40px;
-    background: var(--accent);
-    color: #1a1204;
-    font-size: 1.1rem;
+/* Main play button: glowing gradient circle */
+.buttons #playBtn {
+    width: 46px;
+    height: 46px;
     padding: 0;
+    background: var(--grad);
+    color: #2a0f1a;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 18px rgba(255, 122, 156, 0.45);
 }
 
 .buttons #playBtn:hover {
-    background: var(--accent-hover);
-    color: #1a1204;
+    color: #2a0f1a;
+    transform: scale(1.08);
 }
 
-/* Active state for shuffle/repeat (JS adds .active later) */
+/* Toggled-on state for shuffle/repeat (JS adds .active later) */
 .buttons button.active {
     color: var(--accent);
 }
 
-/* Progress row */
+/* ============ Progress + volume sliders ============ */
 .progress {
     display: flex;
     align-items: center;
@@ -203,15 +263,11 @@ main h2 {
     width: 100%;
     font-size: 0.75rem;
     color: var(--muted);
+    font-variant-numeric: tabular-nums;
 }
 
 .progress input[type="range"] {
     flex: 1;
-}
-
-input[type="range"] {
-    accent-color: var(--accent);
-    cursor: pointer;
 }
 
 .volume {
@@ -221,12 +277,61 @@ input[type="range"] {
 
 .volume input[type="range"] {
     width: 110px;
+    --progress: 100%;
+}
+
+/* Custom range slider. The filled part follows --progress,
+   which the JS will update later (it's empty until then). */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    border-radius: 99px;
+    outline: none;
+    cursor: pointer;
+    background: linear-gradient(
+        to right,
+        var(--accent) var(--progress, 0%),
+        rgba(255, 255, 255, 0.14) var(--progress, 0%)
+    );
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 122, 156, 0.30);
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+    opacity: 1;
+}
+
+input[type="range"]::-moz-range-track {
+    background: transparent;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 122, 156, 0.30);
 }
 
 /* ============ Mobile ============ */
 @media (max-width: 700px) {
     :root {
         --bar-height: 150px;
+    }
+
+    .app-header {
+        padding-top: 32px;
     }
 
     .player-bar {
@@ -242,5 +347,10 @@ input[type="range"] {
 
     .now-playing {
         justify-content: center;
+    }
+
+    .now-playing .thumb {
+        width: 40px;
+        height: 40px;
     }
 }
