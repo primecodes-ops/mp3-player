@@ -1,11 +1,246 @@
+/* ============ Theme ============ */
+:root {
+    --bg: #141414;
+    --surface: #1c1c1c;
+    --hover: #2a2a2a;
+    --text: #f5f5f5;
+    --muted: #a0a0a0;
+    --accent: #f5a524;
+    --accent-hover: #ffb93d;
+    --bar-height: 92px;
+}
 
-/* Make tracks look clickable */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ============ Header ============ */
+.app-header {
+    padding: 32px 24px 8px;
+    background: linear-gradient(to bottom, #2b2006, var(--bg));
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+}
+
+/* ============ Track list ============ */
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    /* keep the last track from hiding behind the fixed bar */
+    padding-bottom: calc(var(--bar-height) + 24px);
+}
+
+main h2 {
+    font-size: 1rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 16px 0 8px;
+}
+
+#tracklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
 #tracklist li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+#tracklist li:hover {
+    background: var(--hover);
+}
+
+#tracklist li.playing {
+    font-weight: bold;
+    color: var(--accent);
+}
+
+/* Row pieces (used once the JS builds these inside each <li>) */
+#tracklist .track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+#tracklist .track-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#tracklist .track-meta {
+    font-size: 0.85rem;
+    font-weight: normal;
+    color: var(--muted);
+}
+
+#tracklist .track-duration {
+    font-size: 0.85rem;
+    font-weight: normal;
+    color: var(--muted);
+}
+
+/* ============ Thumbnail (rows + now playing) ============ */
+.thumb {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #f5a524, #b8431f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============ Player bar ============ */
+.player-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--bar-height);
+    display: grid;
+    grid-template-columns: 1fr minmax(280px, 2fr) 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 0 20px;
+    background: var(--surface);
+    border-top: 1px solid #2f2f2f;
+}
+
+.now-playing {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.now-playing span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.buttons button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: color 0.15s, transform 0.1s;
+}
+
+.buttons button:hover {
+    color: var(--text);
+}
+
+.buttons button:active {
+    transform: scale(0.92);
+}
+
+/* Main play button: filled amber circle */
+#playBtn {
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    color: #1a1204;
+    font-size: 1.1rem;
+    padding: 0;
+}
+
+.buttons #playBtn:hover {
+    background: var(--accent-hover);
+    color: #1a1204;
+}
+
+/* Active state for shuffle/repeat (JS adds .active later) */
+.buttons button.active {
+    color: var(--accent);
+}
+
+/* Progress row */
+.progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.progress input[type="range"] {
+    flex: 1;
+}
+
+input[type="range"] {
+    accent-color: var(--accent);
     cursor: pointer;
 }
 
-/* Highlight currently playing track */
-#tracklist li.playing {
-    font-weight: bold;
-    color: #2563eb;
+.volume {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.volume input[type="range"] {
+    width: 110px;
+}
+
+/* ============ Mobile ============ */
+@media (max-width: 700px) {
+    :root {
+        --bar-height: 150px;
+    }
+
+    .player-bar {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 6px;
+        padding: 10px 16px;
+    }
+
+    .volume {
+        display: none;
+    }
+
+    .now-playing {
+        justify-content: center;
+    }
 }

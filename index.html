@@ -8,17 +8,48 @@
 </head>
 <body>
 
-    <h1>MP3 Player</h1>
-    <label for="playbackMode">Playback Mode:</label>
+    <header class="app-header">
+        <h1>MP3 Player</h1>
+    </header>
 
-    <select id="playbackMode">
+    <main>
+        <h2>Tracks</h2>
+        <ul id="tracklist"></ul>
+    </main>
+
+    <!-- Kept (hidden) so the current app.js doesn't crash -->
+    <select id="playbackMode" hidden>
         <option value="next">Play Next</option>
         <option value="repeat">Repeat Track</option>
     </select>
 
-    <h2>Track List</h2>
-    <ul id="tracklist"></ul>
-    <audio id="player" controls></audio>
+    <footer class="player-bar">
+        <div class="now-playing">
+            <div class="thumb"></div>
+            <span id="nowTitle">Nothing playing</span>
+        </div>
+
+        <div class="controls">
+            <div class="buttons">
+                <button id="shuffleBtn" aria-label="Shuffle">⇄</button>
+                <button id="prevBtn" aria-label="Previous">⏮</button>
+                <button id="playBtn" aria-label="Play">▶</button>
+                <button id="nextBtn" aria-label="Next">⏭</button>
+                <button id="repeatBtn" aria-label="Repeat">↻</button>
+            </div>
+            <div class="progress">
+                <span id="currentTime">0:00</span>
+                <input id="seek" type="range" min="0" max="100" value="0">
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+
+        <div class="volume">
+            <input id="volume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+        </div>
+    </footer>
+
+    <audio id="player" preload="metadata"></audio>
 
     <script src="app.js"></script>
 </body>
