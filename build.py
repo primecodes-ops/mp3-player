@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 
 # Initialize all supported file formats
-FILE_FORMATS = [".mp3", ".m4a", ".wav"]
+FILE_FORMATS = [".mp3", ".m4a", ".wav", ".mp4"]
 audio_files = []
 
 # get the path (json) for each file
